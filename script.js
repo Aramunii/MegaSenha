@@ -16,15 +16,16 @@ $(document).ready(function () {
   // Lidar com mudanças de entrada
   $(document).on("input", ".input-box", function () {
     const indiceEntrada = $(this).index(".input-box");
-    const valorEntrada = parseInt($(this).val());
+    const valorEntrada = $(this).val();
 
-    if (isNaN(valorEntrada)) {
-      $(this).val("");
-    } else {
-      senha_atual[indiceEntrada] = valorEntrada;
-      if ($(this).val().length === 1) {
-        $(".input-box").eq(indiceEntrada + 1).focus();
+    // Verifica se o valor é um número entre 0 e 9
+    if (/^[0-9]$/.test(valorEntrada)) {
+      senha_atual[indiceEntrada] = parseInt(valorEntrada);
+      if (indiceEntrada < 3) {
+        $(".input-box").eq(indiceEntrada + 1).focus(); // Move o foco para o próximo input
       }
+    } else {
+      $(this).val(""); // Limpa o input se não for um número válido
     }
   });
 
@@ -217,10 +218,10 @@ $(document).ready(function () {
     $(".input-box").prop('disabled', true).removeClass('input-box').addClass('input-box-disabled');
     const novaLinha = $(`
       <div class="container-input d-flex justify-content-center">
-        <input type="text" maxlength="1" class="input-box estilo-input">
-        <input type="text" maxlength="1" class="input-box estilo-input">
-        <input type="text" maxlength="1" class="input-box estilo-input">
-        <input type="text" maxlength="1" class="input-box estilo-input">
+        <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="input-box estilo-input">
+        <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="input-box estilo-input">
+        <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="input-box estilo-input">
+        <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="input-box estilo-input">
       </div>
     `).hide();
 
@@ -246,10 +247,10 @@ $(document).ready(function () {
     
     $('.container-jogo').empty().append(`
       <div class="container-input d-flex justify-content-center">
-        <input type="text" maxlength="1" class="input-box estilo-input">
-        <input type="text" maxlength="1" class="input-box estilo-input">
-        <input type="text" maxlength="1" class="input-box estilo-input">
-        <input type="text" maxlength="1" class="input-box estilo-input">
+        <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="input-box estilo-input">
+        <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="input-box estilo-input">
+        <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="input-box estilo-input">
+        <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="input-box estilo-input">
       </div>
     `);
     
