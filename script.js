@@ -20,6 +20,12 @@ $(document).ready(function () {
 
     // Verifica se o valor é um número entre 0 e 9
     if (/^[0-9]$/.test(valorEntrada)) {
+      // Verifica se o número já foi usado
+      if (senha_atual.includes(parseInt(valorEntrada))) {
+        $(this).val(""); // Limpa o input se o número já foi usado
+        return;
+      }
+
       senha_atual[indiceEntrada] = parseInt(valorEntrada);
       if (indiceEntrada < 3) {
         $(".input-box").eq(indiceEntrada + 1).focus(); // Move o foco para o próximo input
@@ -27,6 +33,9 @@ $(document).ready(function () {
     } else {
       $(this).val(""); // Limpa o input se não for um número válido
     }
+
+    // Habilita ou desabilita o botão de enviar baseado no preenchimento dos inputs
+    $("#enviar-senha").prop("disabled", senha_atual.filter(n => n !== undefined).length !== 4);
   });
 
   // Lidar com eventos de tecla pressionada
@@ -38,6 +47,11 @@ $(document).ready(function () {
     } else if (e.key === "Backspace") {
       lidarComBackspace(indiceEntrada);
     }
+  });
+
+  // Evento de clique no botão de enviar
+  $(document).on("click", "#enviar-senha", function() {
+    verificarSenha();
   });
 
   // Configuração das partículas
@@ -149,14 +163,12 @@ $(document).ready(function () {
 
   function verificarSenha() {
     if (senha_atual.includes(undefined) || senha_atual.length !== 4) {
-      setTimeout(() => {
-        Swal.fire({
-          title: 'Incompleto',
-          text: 'Por favor, preencha todos os quatro dígitos',
-          icon: 'warning',
-          confirmButtonText: 'OK'
-        });
-      }, 100);
+      Swal.fire({
+        title: 'Incompleto',
+        text: 'Por favor, preencha todos os quatro dígitos',
+        icon: 'warning',
+        confirmButtonText: 'OK'
+      });
       return;
     }
 
@@ -175,6 +187,7 @@ $(document).ready(function () {
     tentativas++;
 
     if (indices_corretos === 4) {
+      // Senha correta
       setTimeout(() => {
         $('.container-jogo').addClass('celebrate');
         Swal.fire({
@@ -192,7 +205,8 @@ $(document).ready(function () {
         });
       }, 100);
     } else {
-      atualizarFeedback(numeros_corretos, indices_corretos);
+      // Senha incorreta
+      adicionarHistoricoTentativa(senha_atual, numeros_corretos, indices_corretos);
       adicionarNovaLinhaEntrada();
       $('.container-jogo').addClass('shake');
       setTimeout(() => {
@@ -208,14 +222,28 @@ $(document).ready(function () {
     }
   }
 
-  function atualizarFeedback(numeros_corretos, indices_corretos) {
-    $('#acerto_num').text(numeros_corretos);
-    $('#acerto_index').text(indices_corretos);
-    console.log(`Números corretos: ${numeros_corretos}, Posições corretas: ${indices_corretos}`);
+  function adicionarHistoricoTentativa(tentativa, numeros_corretos, indices_corretos) {
+    const historicoHTML = `
+      <div class="historico-tentativa">
+        <div class="historico-senha">
+          ${tentativa.map(digito => `<div class="historico-digito">${digito}</div>`).join('')}
+        </div>
+        <div class="historico-info">
+          <span class="historico-item"><i class="fas fa-check-circle"></i>${numeros_corretos}</span>
+          <span class="historico-item"><i class="fas fa-bullseye"></i>${indices_corretos}</span>
+        </div>
+      </div>
+    `;
+    
+    $('.container-jogo').prepend(historicoHTML);
   }
 
   function adicionarNovaLinhaEntrada() {
-    $(".input-box").prop('disabled', true).removeClass('input-box').addClass('input-box-disabled');
+    // Remover inputs antigos e botão
+    $(".container-input").remove();
+    $("#enviar-senha").remove();
+
+    // Adicionar nova linha de input e botão
     const novaLinha = $(`
       <div class="container-input d-flex justify-content-center">
         <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="input-box estilo-input">
@@ -223,13 +251,16 @@ $(document).ready(function () {
         <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="input-box estilo-input">
         <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="input-box estilo-input">
       </div>
-    `).hide();
+      <button id="enviar-senha" class="btn-enviar" disabled>Enviar</button>
+    `);
 
     $('.container-jogo').append(novaLinha);
-    novaLinha.fadeIn(500);
     
     // Limpar senha_atual para a nova linha
     senha_atual = [];
+
+    // Focar no primeiro input da nova linha
+    $(".input-box").first().focus();
 
     // Rolar para a nova linha de entrada
     const containerJogo = $('.container-jogo');
@@ -241,10 +272,7 @@ $(document).ready(function () {
     senha_atual = [];
     tentativas = 0;
     
-    // Resetar o feedback
-    $('#acerto_num').text('0');
-    $('#acerto_index').text('0');
-    
+    // Limpar todo o conteúdo e adicionar nova linha de entrada
     $('.container-jogo').empty().append(`
       <div class="container-input d-flex justify-content-center">
         <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="input-box estilo-input">
@@ -252,8 +280,10 @@ $(document).ready(function () {
         <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="input-box estilo-input">
         <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="input-box estilo-input">
       </div>
+      <button id="enviar-senha" class="btn-enviar" disabled>Enviar</button>
     `);
     
+    // Gerar nova senha
     for (let i = 0; i < 4; i++) {
       let aleatorio;
       do {
