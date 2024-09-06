@@ -293,4 +293,12 @@ $(document).ready(function () {
     }
     console.log(senha);
   }
+
+  // Verificar se é a primeira visita do usuário
+  if (!localStorage.getItem('visitouAntes')) {
+    // Mostrar o modal
+    $('#comoJogarModal').modal('show');
+    // Marcar que o usuário já visitou
+    localStorage.setItem('visitouAntes', 'true');
+  }
 });
