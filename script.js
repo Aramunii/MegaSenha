@@ -235,7 +235,7 @@ $(document).ready(function () {
       </div>
     `;
     
-    $('.container-jogo').prepend(historicoHTML);
+    $('.container-jogo').append(historicoHTML);
   }
 
   function adicionarNovaLinhaEntrada() {
