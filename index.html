@@ -9,9 +9,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
-    <script src="script.js"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="script.js"></script>
 
     <style>
         body {
@@ -34,53 +33,6 @@
             color: #fff;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
             margin-top: 20px;
-        }
-
-        .info-container {
-            position: sticky;
-            top: 0;
-            background-color: rgba(30, 60, 114, 0.9);
-            width: 100%;
-            z-index: 1000;
-            padding: 10px 0;
-            margin-bottom: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        .info {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            font-size: 18px;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-
-        .info-item {
-            display: flex;
-            align-items: center;
-            margin: 0 10px; /* Adiciona espaço entre os itens */
-        }
-
-        .info i {
-            margin-right: 10px;
-            font-size: 24px;
-        }
-
-        .info-text {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .info-label {
-            font-size: 14px;
-            opacity: 0.8;
-        }
-
-        .info-value {
-            font-size: 20px;
-            font-weight: bold;
         }
 
         .container-jogo {
@@ -149,31 +101,77 @@
         .celebrate {
             animation: celebrate 0.5s ease-in-out;
         }
+
+        .btn-enviar {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-enviar:hover {
+            background-color: #45a049;
+        }
+
+        .btn-enviar:active {
+            background-color: #3e8e41;
+        }
+
+        /* Estilo para o botão desabilitado */
+        .btn-enviar:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .historico-tentativa {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+        }
+
+        .historico-senha {
+            display: flex;
+        }
+
+        .historico-digito {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 2px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+
+        .historico-info {
+            display: flex;
+        }
+
+        .historico-item {
+            margin-left: 10px;
+            font-size: 0.9rem;
+        }
+
+        .historico-item i {
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
     <div id="particles-js"></div>
     <div class="cabecalho">
         <h1>MEGA SENHA</h1>
-    </div>
-
-    <div class="info-container">
-        <div class="info">
-            <div class="info-item">
-                <i class="fas fa-check-circle"></i>
-                <div class="info-text">
-                    <span class="info-label">Números acertados</span>
-                    <span class="info-value" id="acerto_num">0</span>
-                </div>
-            </div>
-            <div class="info-item">
-                <i class="fas fa-bullseye"></i>
-                <div class="info-text">
-                    <span class="info-label">Posições corretas</span>
-                    <span class="info-value" id="acerto_index">0</span>
-                </div>
-            </div>
-        </div>
     </div>
 
     <div class="container-jogo">
@@ -183,6 +181,7 @@
             <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="input-box estilo-input" id="input3">
             <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="input-box estilo-input" id="input4">
         </div>
+        <button id="enviar-senha" class="btn-enviar" disabled>Enviar</button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
