@@ -308,8 +308,9 @@ function startConfetti() {
 document.getElementById('shareButton').addEventListener('click', function() {
   const shareData = {
       title: 'Mega Senha',
-      text: `Eu acertei a senha em ${tentativas} tentativas! Desafie-se e veja se você consegue fazer melhor!`,
-      url: window.location.href
+      text: `Eu acertei uma senha em ${tentativas} tentativas! \n Desafie-se e veja se você consegue fazer melhor!`,
+      url: window.location.href,
+      separator: '\n\n', // Add a separator between the text and the URL
   };
 
   if (navigator.share) {
@@ -320,11 +321,8 @@ document.getElementById('shareButton').addEventListener('click', function() {
       });
   } else {
       const shareableText = `Eu acertei a senha em ${tentativas} tentativas! Desafie-se e veja se você consegue fazer melhor! ${window.location.href}`;
-      navigator.clipboard.writeText(shareableText).then(() => {
-          alert('Texto copiado para a área de transferência!');
-      }).catch((error) => {
-          console.error('Erro ao copiar o texto', error);
-      });
+      const whatsappLink = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareableText)}`;
+      window.open(whatsappLink, '_blank');
   }
 });
 
