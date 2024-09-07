@@ -189,21 +189,10 @@ $(document).ready(function () {
     if (indices_corretos === 4) {
       // Senha correta
       setTimeout(() => {
-        $('.container-jogo').addClass('celebrate');
-        Swal.fire({
-          title: 'Correto!',
-          text: `Você adivinhou a senha em ${tentativas} tentativas!`,
-          icon: 'success',
-          confirmButtonText: 'OK',
-          customClass: {
-            container: 'meu-swal'
-          }
-        }).then((result) => {
-          if (result.isConfirmed) {
-            reiniciarJogo();
-          }
-        });
-      }, 100);
+        const successModal = new bootstrap.Modal(document.getElementById('acertoModal'));
+        successModal.show();
+        $("#tentativas").text(tentativas);
+    }, 100);
     } else {
       // Senha incorreta
       adicionarHistoricoTentativa(senha_atual, numeros_corretos, indices_corretos);
@@ -301,4 +290,42 @@ $(document).ready(function () {
     // Marcar que o usuário já visitou
     localStorage.setItem('visitouAntes', 'true');
   }
+
+// Função para iniciar a animação de confetes
+function startConfetti() {
+  const confettiContainer = document.querySelector('.confetti');
+  for (let i = 0; i < 100; i++) {
+      const confettiPiece = document.createElement('div');
+      confettiPiece.classList.add('confetti-piece');
+      confettiPiece.style.left = `${Math.random() * 100}%`;
+      confettiPiece.style.animationDelay = `${Math.random() * 3}s`;
+      confettiPiece.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+      confettiContainer.appendChild(confettiPiece);
+  }
+}
+
+// Event listener for the share button
+document.getElementById('shareButton').addEventListener('click', function() {
+  const shareData = {
+      title: 'Mega Senha',
+      text: `Eu acertei a senha em ${tentativas} tentativas! Desafie-se e veja se você consegue fazer melhor!`,
+      url: window.location.href
+  };
+
+  if (navigator.share) {
+      navigator.share(shareData).then(() => {
+          console.log('Compartilhamento bem-sucedido');
+      }).catch((error) => {
+          console.error('Erro ao compartilhar', error);
+      });
+  } else {
+      const shareableText = `Eu acertei a senha em ${tentativas} tentativas! Desafie-se e veja se você consegue fazer melhor! ${window.location.href}`;
+      navigator.clipboard.writeText(shareableText).then(() => {
+          alert('Texto copiado para a área de transferência!');
+      }).catch((error) => {
+          console.error('Erro ao copiar o texto', error);
+      });
+  }
+});
+
 });
